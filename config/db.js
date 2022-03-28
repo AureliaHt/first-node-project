@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
 mongoose
-    .connect('mongodb+srv://"+process.env.MONGODB_PASSWORD+"@cluster0.bru98.mongodb.net/mernProject',
+    .connect(
+        "mongodb+srv://" + process.env.DB_USER_PASS + "@cluster0.bru98.mongodb.net/first-mern-project",
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     }
     )
-    .then(() => console.log('Connectet to MongoDB'))
-    .catch((err) => console.log('Failed to connect to MongoDB', err));
+    .then(() => console.log('connected to mongoDB'))
+    .catch((err) => console.log('failed to connect to mongoDB', err));
