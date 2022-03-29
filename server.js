@@ -1,17 +1,20 @@
+// IMPORTS
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/user.routes');
 require('dotenv').config({path: './config/.env'});
 require('./config/db');
 const app = express();
 
-//middleware
+//MIDDLEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-//routes
+//ROUTES
 app.use('/api/user', userRoutes);
 
-// server 
+// SERVER
 app.listen(5000, () => {
     console.log(`listenning on port ${process.env.PORT}`);
 })
