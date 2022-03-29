@@ -1,5 +1,6 @@
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const { signUpErrors, signInErrors } = require('../utils/errors.utils');
 
 
 // DUREE DE VIE DU COOKIE CONTENANT LE TOKEN (3J)
@@ -12,7 +13,7 @@ const createToken = (id) => {
     })
 };
 
-// S'INSCRIRE
+// S'INSCRIRE  SIGN UP
 module.exports.signUp = async (req, res) => {
     console.log(req.body);
     const {pseudo, email, password} = req.body
@@ -22,11 +23,12 @@ module.exports.signUp = async (req, res) => {
         res.status(201).json({ user : user._id});
     }
     catch(err) {
-        res.status(200).send({ err})
+        const errors = signUpErrors(err);
+        res.status(200).send({ errors})
     }
 }
 
-// SE CONNECTER
+// SE CONNECTER   SIGN IN
 module.exports.signIn = async (req, res) => {
     const { email, password } = req.body
 
@@ -37,7 +39,8 @@ module.exports.signIn = async (req, res) => {
         res.status(200).json({ user: user._id})
     }
     catch (err){
-        res.status(200).json(err);
+        const errors = signInErrors(err);
+        res.status(200).json({ errors})
     }
 };
 
