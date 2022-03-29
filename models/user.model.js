@@ -48,12 +48,25 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-// fonction de salage qui se jouera avant la sauvegarde des données
+// SALAGE DES MDP AU SIGN UP
 userSchema.pre("save", async function(next) {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
+
+// SALAGE DES MDP AU SIGN IN AVEC COMPARAISON (METHODE COMPARE) ENTRE EMAIL ET PASSWORD
+userSchema.statics.login = async function (email, password) {
+    const user = await this.findOne({email});
+    if (user) {
+        const auth = await bcrypt.compare(password, user.password);
+        if (auth) {
+            return user;
+        }
+        throw Error('incorrect password');
+    }
+    throw Error('incorrect email');
+};
 
 const UserModel = mongoose.model('user', userSchema);
 
