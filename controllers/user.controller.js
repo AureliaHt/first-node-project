@@ -35,11 +35,13 @@ module.exports.updateUser = async (req, res) => {
                   upsert: true, 
                   setDefaultsOnInsert: true
                 },
-                (err, docs) => {
-                    if (!err) return res.send(docs);
-                    if (err) return res.status(500).send({ message: err});
-                }
+                //(err, docs) => {
+                    //if (!err) return res.send(docs);
+                    //if (err) return res.status(500).send({ message: err});
+                //}
             )
+            .then((docs) => res.send(docs))
+            .catch((err) => res.status(500).send({ message: err }));
         } 
         catch (err) {
             return res.status(500).json({ message: err});
@@ -73,20 +75,24 @@ module.exports.follow = async (req, res) => {
             req.params.id,
             { $addToSet: { following: req.params.idToFollow}},
             { new: true, upsert: true },
-            (err, docs) => {
-                if (!err) res.status(201).json(docs);
-                else return res.status(400).json(err);
-            }
-        );
+            //(err, docs) => {
+                //if (!err) res.status(201).json(docs);
+                //else return res.status(400).json(err);
+            //}
+        )
+        .then((docs) => res.status(201).json(docs))
+        .catch((err) => res.status(400).json(err));
+
         // add to following list
         await UserModel.findByIdAndUpdate(
             req.body.idToFollow,
             { $addToSet: {followers: req.params.id}},
             { new: true, upsert: true },
-            (err, docs) => {
-            if (err) return res.status(400).json(err);
-            }
-        );
+            //(err, docs) => {
+            //if (err) return res.status(400).json(err);
+            //}
+        )
+        .then((err) => res.status(400).json(err));
     }
     catch (err) {
         return res.status(500).json({ message: err});
@@ -105,20 +111,23 @@ module.exports.unfollow = async (req, res) => {
             req.params.id,
             { $pull: { following: req.params.idToUnfollow}},
             { new: true, upsert: true },
-            (err, docs) => {
-                if (!err) res.status(201).json(docs);
-                else return res.status(400).json(err);
-            }
-        );
+            //(err, docs) => {
+                //if (!err) res.status(201).json(docs);
+                //else return res.status(400).json(err);
+            //}
+        )
+        .then((docs) => res.status(201).json(docs))
+        .catch((err) => res.status(400).json(err))
         // remove from the following list
         await UserModel.findByIdAndUpdate(
             req.body.idToUnfollow,
             { $pull: {followers: req.params.id}},
             { new: true, upsert: true },
-            (err, docs) => {
-            if (err) return res.status(400).json(err);
-            }
-        );
+            //(err, docs) => {
+            //if (err) return res.status(400).json(err);
+            //}
+        )
+        .then((err) => res.status(400).json(err));
     }
     catch (err) {
         return res.status(500).json({ message: err});
