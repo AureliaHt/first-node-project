@@ -136,7 +136,7 @@ module.exports.commentPost = (req, res) => {
     }
 };
 
-// EDIT A COMMENT ON A POST   -     !!! ACTUALLY NOT WORKING   !!!
+// EDIT A COMMENT ON A POST
 module.exports.editComment = (req, res) => {
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
@@ -145,9 +145,9 @@ module.exports.editComment = (req, res) => {
         return PostModel.findById(
             req.params.id,
             (err, docs) => {
-                const theComment = docs.comments.find((comment) => {
+                const theComment = docs.comments.find((comment) => 
                     comment._id.equals(req.body.commentId)
-                })
+                );
 
                 if (!theComment) return res.status(404).send('Comment not found')
                 theComment.text = req.body.text;
