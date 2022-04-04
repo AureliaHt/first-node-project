@@ -4,7 +4,7 @@ const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 
-// UPLOAD DE L'AVATAR
+// UPLOAD DE L'AVATAR  --- NOT WORKING
 module.exports.uploadProfil = async (req, res) => {
   try {
     if (
@@ -17,7 +17,7 @@ module.exports.uploadProfil = async (req, res) => {
     if (req.file.size > 500000)
         throw Error("max size");
   } catch (err){
-      return res.status(400).json(err);
+      return res.status(201).json(err);
   }
 
   const fileName = req.body.name + ".jpg";
